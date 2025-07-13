@@ -1,5 +1,6 @@
 package com.example.gmailuilayout
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import java.time.LocalDateTime
 
 class EmailsListViewModel() : ViewModel() {
 
+    private val tag = "EmailsListViewModel"
     private val _emailsList = MutableLiveData<List<EmailItem>>(emptyList())
     val emailsList : LiveData<List<EmailItem>> get() = _emailsList
 
@@ -16,6 +18,23 @@ class EmailsListViewModel() : ViewModel() {
 
     fun getAllEmailsList(){
         _emailsList.value = dummyData()
+        Log.d(tag,"get all emails function called and count is ${_emailsList.value?.size ?: -1}")
+    }
+
+    fun removeEmailWithId(emailId: Int){
+        Log.d(tag,"email with id $emailId is deleted")
+
+        val currentList = _emailsList.value?: return
+
+        val updatedList = currentList.filterNot{
+            it.emailId == emailId
+        }
+
+        _emailsList.value = updatedList
+
+        Log.d(tag,"remaining emails count is ${_emailsList.value?.size ?: -1}")
+
+
     }
 
 

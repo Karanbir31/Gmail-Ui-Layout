@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class RcvEmailsAdapter(
-    private val emails: List<EmailItem> = emptyList()
+    private val emails: List<EmailItem>
 ) : RecyclerView.Adapter<RcvEmailsAdapter.RcvEmailsViewHolder>() {
 
     private lateinit var context: Context
@@ -60,11 +60,12 @@ class RcvEmailsAdapter(
             rcvStarMarkedImageButton.setOnClickListener{
                 currEmail.starMarked = !currEmail.starMarked
             }
-
-            rcvMain
-
         }
     }
+
+    fun getItem(position: Int): Int? =
+        if (position in emails.indices) emails[position].emailId else null
+
 
 
 }
