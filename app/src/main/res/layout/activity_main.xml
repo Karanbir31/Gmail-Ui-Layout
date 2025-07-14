@@ -3,41 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
-        android:background="#DCF2F0"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         tools:context=".MainActivity">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="0dp"
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Search..."
+            app:elevation="2dp"
+            app:layout_constraintBottom_toTopOf="@id/rcvEmails"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+        <androidx.cardview.widget.CardView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/searchBar"
+            app:layout_constraintEnd_toEndOf="@id/searchBar"
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintStart_toStartOf="@id/searchBar"
+            app:layout_constraintTop_toTopOf="@id/searchBar">
+
+            <ImageView
+                android:id="@+id/rcvUsersImage"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                app:title="Action Bar" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:contentDescription="user image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
 
-        </com.google.android.material.appbar.AppBarLayout>
+        </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvEmails"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchBar"
+            tools:listitem="@layout/rcv_email_list_item" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-            tools:listitem="@layout/rcv_email_list_item" />
 
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

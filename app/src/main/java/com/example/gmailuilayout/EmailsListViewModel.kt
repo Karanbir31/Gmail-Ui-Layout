@@ -18,26 +18,15 @@ class EmailsListViewModel() : ViewModel() {
 
     fun getAllEmailsList(){
         _emailsList.value = dummyData()
-        Log.d(tag,"get all emails function called and count is ${_emailsList.value?.size ?: -1}")
     }
 
-    fun removeEmailWithId(emailId: Int){
-        Log.d(tag,"email with id $emailId is deleted")
-
-        val currentList = _emailsList.value?: return
-
-        val updatedList = currentList.filterNot{
-            it.emailId == emailId
-        }
-
-        _emailsList.value = updatedList
-
-        Log.d(tag,"remaining emails count is ${_emailsList.value?.size ?: -1}")
-
+    fun removeEmailWithId(emailIdToDelete : Int){
+        val currentList = _emailsList.value?.toMutableList() ?: return
+        currentList.removeIf{ it.emailId == emailIdToDelete}
+        _emailsList.value = currentList
+        Log.d(tag, "Deleted email with id: ${emailIdToDelete}")
 
     }
-
-
 
     private fun dummyData() : List<EmailItem> {
 

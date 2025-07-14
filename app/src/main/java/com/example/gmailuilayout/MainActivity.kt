@@ -5,16 +5,17 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.gmailuilayout.databinding.ActivityMainBinding
+import java.time.LocalDateTime
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: EmailsListViewModel
     private lateinit var rcvEmailsAdapter: RcvEmailsAdapter
+    private lateinit var emailsListViewModel: EmailsListViewModel
 
     private val swipeCallback = object : ItemTouchHelper.SimpleCallback(
         0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
@@ -23,63 +24,44 @@ class MainActivity : AppCompatActivity() {
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
-        ): Boolean {/*
-          val fromPosition = viewHolder.adapterPosition
-            val toPosition = target.adapterPosition
-
-            // Swap items in your data list
-            Collections.swap(viewModel.emailsList.value!!, fromPosition, toPosition)
-
-            // Notify adapter of the move
-            recyclerView.adapter?.notifyItemMoved(fromPosition, toPosition)
-
-
-           return true
-             */
+        ): Boolean {
             return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            if (direction == ItemTouchHelper.LEFT) {
-                Toast.makeText(this@MainActivity, "Swiped Left", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this@MainActivity, "Swiped Right", Toast.LENGTH_SHORT).show()
+            val position = viewHolder.adapterPosition
 
-                val emailIdToDelete = rcvEmailsAdapter.getItem(viewHolder.adapterPosition)
-                if (emailIdToDelete!=null){
-                    viewModel.removeEmailWithId(emailIdToDelete)
-                }
+            if (position != RecyclerView.NO_POSITION) {
 
+                emailsListViewModel.removeEmailWithId(position)
+
+                rcvEmailsAdapter.notifyItemRemoved(position)
+                rcvEmailsAdapter.notifyItemRangeChanged(position, emailsListViewModel.emailsList.value!!.size)
+                Toast.makeText(this@MainActivity, "Deleted", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        viewModel = EmailsListViewModel()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        emailsListViewModel = EmailsListViewModel()
+
+        rcvEmailsAdapter = RcvEmailsAdapter(emailsListViewModel.emailsList.value!!)
 
         binding.apply {
+            searchBar.setNavigationIcon(R.drawable.outline_menu_24) // Replace with your own icon
+            Glide.with(this@MainActivity).load("https://randomuser.me/api/portraits/women/9.jpg").into(rcvUsersImage)
+            ItemTouchHelper(swipeCallback).attachToRecyclerView(rcvEmails)
+            rcvEmails.adapter = rcvEmailsAdapter
+            rcvEmails.layoutManager =
+                LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
 
-            setSupportActionBar(toolbar)
-
-            viewModel.emailsList.observe(
-                this@MainActivity, Observer {
-                    rcvEmailsAdapter = RcvEmailsAdapter(it)
-
-                    rcvEmails.adapter = rcvEmailsAdapter
-
-                    rcvEmails.layoutManager =
-                        LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
-
-                    ItemTouchHelper(swipeCallback).attachToRecyclerView(rcvEmails)
-
-                })
 
         }
 
     }
+
 }

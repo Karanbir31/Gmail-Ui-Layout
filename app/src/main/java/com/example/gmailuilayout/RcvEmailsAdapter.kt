@@ -1,6 +1,7 @@
 package com.example.gmailuilayout
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +27,7 @@ class RcvEmailsAdapter(
         return RcvEmailsViewHolder(rcvDataBinding)
     }
 
-    override fun getItemCount() = 10
+    override fun getItemCount() = emails.size
 
 
     override fun onBindViewHolder(holder: RcvEmailsViewHolder, position: Int) {
@@ -38,34 +39,21 @@ class RcvEmailsAdapter(
             currEmail.emailDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"))
         }
 
-        val starIcon = if (currEmail.starMarked) {
-            R.drawable.star_button_selected
-        }else{
-            R.drawable.star_button_unselected
-        }
-
-
         holder.rcvBinding.apply {
-
-            Glide.with(context).load(currEmail.senderImage).into(rcvSenderImage)
-
-            rcvSenderName.text = currEmail.senderName
-            rcvEmailDateTime.text = dateOrTime
-
-            rcvEmailSubject.text = currEmail.emailSubject
-            rcvEmailMessage.text = currEmail.emailMessage
-
-            rcvStarMarkedImageButton.setImageResource(starIcon)
-
-            rcvStarMarkedImageButton.setOnClickListener{
-                currEmail.starMarked = !currEmail.starMarked
+            try {
+                Glide.with(context).load(currEmail.senderImage).into(rcvSenderImage)
+                rcvSenderName.text = "${ currEmail.senderName } id- ${ currEmail.emailId } ap - ${position}"
+                rcvEmailDateTime.text = dateOrTime
+                rcvEmailSubject.text = currEmail.emailSubject
+                rcvEmailMessage.text = currEmail.emailMessage
+                rcvStarMarkedCheckBox.isChecked = currEmail.starMarked
+                rcvStarMarkedCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                    currEmail.starMarked = isChecked
+                }
+            }catch (e: Exception){
+                Log.e("OnBindViewHolder", e.message.toString(), e)
             }
+
         }
     }
-
-    fun getItem(position: Int): Int? =
-        if (position in emails.indices) emails[position].emailId else null
-
-
-
 }

@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginHorizontal="16dp"
-    android:paddingTop="16sp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
         android:id="@+id/rcvMain"
-        android:background="@color/white"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16sp">
 
-
-        <ImageView
-            android:id="@+id/rcvSenderImage"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/rcvSenderImageLayout"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/circular_image_bg"
-            android:src="@drawable/ic_launcher_background"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:cardCornerRadius="24dp"
+            app:layout_constraintBottom_toBottomOf="@id/rcvEmailMessage"
             app:layout_constraintEnd_toStartOf="@id/rcvSenderName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/rcvSenderName">
+
+            <ImageView
+                android:id="@+id/rcvSenderImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circular_image_bg"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
+        </com.google.android.material.card.MaterialCardView>
+
 
         <TextView
             android:id="@+id/rcvSenderName"
@@ -34,7 +40,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/rcvEmailDateTime"
             app:layout_constraintHorizontal_weight="3"
-            app:layout_constraintStart_toEndOf="@id/rcvSenderImage"
+            app:layout_constraintStart_toEndOf="@id/rcvSenderImageLayout"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -54,11 +60,9 @@
             android:id="@+id/rcvEmailSubject"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="Assignment- Create Ui Design"
             android:textSize="14sp"
             android:textStyle="bold"
-
             app:layout_constraintEnd_toEndOf="@+id/rcvSenderName"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="@id/rcvSenderName"
@@ -69,7 +73,6 @@
             android:id="@+id/rcvEmailMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:overScrollMode="always"
             android:singleLine="true"
             android:text="jiTalent-TMS Dear Karanbir Singh,I hope this email finds you well."
@@ -79,14 +82,13 @@
             app:layout_constraintStart_toStartOf="@id/rcvSenderName"
             app:layout_constraintTop_toBottomOf="@id/rcvEmailSubject" />
 
-        <ImageButton
-            android:id="@+id/rcvStarMarkedImageButton"
+        <CheckBox
+            android:id="@+id/rcvStarMarkedCheckBox"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="#80FFFFFF"
+            android:background="@android:color/transparent"
+            android:button="@drawable/star_button_selector"
             android:padding="0dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/star_button_selected"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rcvEmailDateTime"
             app:layout_constraintStart_toStartOf="@id/rcvEmailDateTime"
