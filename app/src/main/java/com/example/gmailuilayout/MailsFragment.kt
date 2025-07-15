@@ -1,6 +1,5 @@
 package com.example.gmailuilayout
 
-import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -18,14 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gmailuilayout.databinding.FragmentMailsBinding
 
-
 class MailsFragment : Fragment() {
 
     private lateinit var binding: FragmentMailsBinding
     private lateinit var rcvEmailsAdapter: RcvEmailsAdapter
     private lateinit var emailsList: MutableList<EmailItem>
     private lateinit var viewModel: EmailsListViewModel
-    private  var deleteIcon : Drawable? = null
+    private var deleteIcon: Drawable? = null
 
     private var searchQuery = ""
 
@@ -56,6 +54,7 @@ class MailsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
             }
         }
+
         override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
             return 0.7f
         }
@@ -78,32 +77,42 @@ class MailsFragment : Fragment() {
             val itemHeight = itemView.bottom - itemView.top
 
 
-            val iconMargin = ( itemHeight - intrinsicHeight)/2
+            val iconMargin = (itemHeight - intrinsicHeight) / 2
             val iconTop = itemView.top + iconMargin
             val iconBottom = iconTop + intrinsicHeight
-            val iconLeft : Int
-            val iconRight : Int
+            val iconLeft: Int
+            val iconRight: Int
 
-            if (dX>0){
+            if (dX > 0) {
                 // means right swipe -----> so draw left to right
-                background.setBounds(itemView.left,  itemView.top,itemView.left + dX.toInt(),  itemView.bottom)
+                background.setBounds(
+                    itemView.left,
+                    itemView.top,
+                    itemView.left + dX.toInt(),
+                    itemView.bottom
+                )
 
                 iconLeft = itemView.left + iconMargin
                 iconRight = iconLeft + intrinsicWidth
 
-            }else if(dX < 0){
+            } else if (dX < 0) {
                 // dX < 0 | so swipe left <------ so draw right to left
-                background.setBounds(itemView.right + dX.toInt(),  itemView.top,itemView.right,  itemView.bottom)
+                background.setBounds(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
 
                 iconRight = itemView.right - iconMargin
                 iconLeft = iconRight - intrinsicWidth
-            } else{
+            } else {
                 iconLeft = 0
                 iconRight = 0
             }
             background.draw(c)
 
-            if (deleteIcon != null){
+            if (deleteIcon != null) {
                 deleteIcon!!.setBounds(iconLeft, iconTop, iconRight, iconBottom)
 
                 deleteIcon!!.draw(c)
@@ -136,7 +145,8 @@ class MailsFragment : Fragment() {
         binding.apply {
 
             searchBar.setNavigationIcon(R.drawable.outline_menu_24) // Replace with your own icon
-            Glide.with(requireContext()).load("https://randomuser.me/api/portraits/women/9.jpg").into(rcvUsersImage)
+            Glide.with(requireContext()).load("https://randomuser.me/api/portraits/women/9.jpg")
+                .into(rcvUsersImage)
 
             deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.baseline_delete_24)
             ItemTouchHelper(swipeCallback).attachToRecyclerView(rcvEmails)
@@ -163,12 +173,14 @@ class MailsFragment : Fragment() {
             searchView.editText.setOnEditorActionListener { textView, actionId, event ->
 
                 searchQuery = searchView.text.toString()
+                searchBar.setText(searchQuery)
 
                 // perform task on query like | api calls | list filter | etc
 
                 searchView.hide()
 
-                Toast.makeText(requireContext(), "searchQuery is $searchQuery", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "searchQuery is $searchQuery", Toast.LENGTH_SHORT)
+                    .show()
 
                 true
             }
