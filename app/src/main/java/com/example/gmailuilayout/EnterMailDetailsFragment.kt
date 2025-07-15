@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -59,7 +60,6 @@ class EnterMailDetailsFragment : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,6 +105,31 @@ class EnterMailDetailsFragment : Fragment() {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
             .show()
     }
+
+
+    private fun updateConstraint(
+        constrainedViewId: Int,
+        constrainedSide: Int,
+        targetViewId: Int,
+        targetSide: Int
+    ) {
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.main)
+
+        constraintSet.connect(
+            constrainedViewId, // view to be constraint viewA
+            constrainedSide,  // side
+            targetViewId,    // constraint to this id viewB
+            targetSide    // side of target
+        )
+
+        constraintSet.applyTo(binding.main)
+
+    }
+
+
+}
 
 
 }

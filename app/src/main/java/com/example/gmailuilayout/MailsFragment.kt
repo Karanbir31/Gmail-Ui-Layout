@@ -158,6 +158,9 @@ class MailsFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
             fabButtonCompose.setOnClickListener {
+
+
+
                 val email = viewModel.getRandomEmail()
                 emailsList.add(0, email) // Add to top
                 rcvEmailsAdapter.notifyItemInserted(0)
