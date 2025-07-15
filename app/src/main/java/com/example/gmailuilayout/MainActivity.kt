@@ -23,9 +23,6 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.apply {
-            searchBar.setNavigationIcon(R.drawable.outline_menu_24) // Replace with your own icon
-            Glide.with(this@MainActivity).load("https://randomuser.me/api/portraits/women/9.jpg").into(rcvUsersImage)
-
 
             setCurrentFragment(MailsFragment())
             bottomNavBar.setOnItemSelectedListener {
@@ -34,7 +31,6 @@ class MainActivity : AppCompatActivity() {
                         setCurrentFragment(MailsFragment())
                         true
                     }
-
                     else ->{
                         setCurrentFragment(MeetFragment())
                         true
@@ -42,9 +38,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-
     }
 
 
