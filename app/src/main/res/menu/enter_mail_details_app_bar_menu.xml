@@ -19,11 +19,11 @@
         android:title="Discard"
         app:showAsAction="never" />
     <item
-        android:id="@+id/discardActionMenu"
+        android:id="@+id/settingActionMenu"
         android:title="Setting"
         app:showAsAction="never" />
     <item
-        android:id="@+id/discardActionMenu"
+        android:id="@+id/saveDraftActionMenu"
         android:title="Save draft"
         app:showAsAction="never" />
 
