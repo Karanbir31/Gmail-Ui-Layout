@@ -42,7 +42,7 @@ class RcvEmailsAdapter(
         holder.rcvBinding.apply {
             try {
                 Glide.with(context).load(currEmail.senderImage).into(rcvSenderImage)
-                rcvSenderName.text = "${ currEmail.senderName } id- ${ currEmail.emailId } ap - ${position}"
+                rcvSenderName.text = currEmail.senderName
                 rcvEmailDateTime.text = dateOrTime
                 rcvEmailSubject.text = currEmail.emailSubject
                 rcvEmailMessage.text = currEmail.emailMessage

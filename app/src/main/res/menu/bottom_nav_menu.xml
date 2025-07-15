@@ -2,18 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/gamesFragment"
-        android:icon="@drawable/games_selector"
+        android:id="@+id/mails"
+        android:icon="@drawable/mails_icon_selector"
         android:title="Games" />
 
     <item
-        android:id="@+id/appsFragment"
-        android:icon="@drawable/apps_selector"
+        android:id="@+id/meet"
+        android:icon="@drawable/meet_icon_selector"
         android:title="Apps" />
-
-    <item
-        android:id="@+id/booksFragment"
-        android:icon="@drawable/books_selector"
-        android:title="Books" />
 
 </menu>
