@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sendActionMenu"
+        android:icon="@drawable/outline_send_24"
+        android:title="send"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/attachmentActionMenu"
+        android:icon="@drawable/outline_attachment_24"
+        android:title="attachment"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/discardActionMenu"
+        android:title="Discard"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/discardActionMenu"
+        android:title="Setting"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/discardActionMenu"
+        android:title="Save draft"
+        app:showAsAction="never" />
+
+
+</menu>
