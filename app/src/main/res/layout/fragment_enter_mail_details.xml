@@ -27,12 +27,46 @@
                 />
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/senderNameStaticText"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:paddingVertical="8dp"
+            android:text="Name"
+            android:textColor="#5B5B5B"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/senderNameEditText"
+            app:layout_constraintEnd_toStartOf="@id/senderNameEditText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/senderNameEditText" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/senderNameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/transparent"
+            android:hint="Sender Name"
+            android:paddingVertical="8dp"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/fromEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/senderNameStaticText"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
+
         <TextView
             android:id="@+id/fromStaticText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center"
-            android:paddingHorizontal="24dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
             android:paddingVertical="8dp"
             android:text="From"
             android:textColor="#5B5B5B"
@@ -55,7 +89,7 @@
             app:layout_constraintEnd_toStartOf="@id/fromDropDownCheckBox"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/fromStaticText"
-            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+            app:layout_constraintTop_toBottomOf="@id/senderNameEditText" />
 
         <CheckBox
             android:id="@+id/fromDropDownCheckBox"
@@ -68,22 +102,12 @@
             app:layout_constraintTop_toTopOf="@id/fromEditText" />
 
         <TextView
-            android:id="@+id/fromEmailTextError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Please enter valid mail address"
-            android:textSize="14sp"
-            android:textColor="@android:color/holo_red_dark"
-            app:layout_constraintStart_toStartOf="@id/fromEditText"
-            app:layout_constraintTop_toBottomOf="@id/fromEditText"
-            />
-
-        <TextView
             android:id="@+id/toStaticText"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center"
-            android:paddingHorizontal="24dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
             android:paddingVertical="8dp"
             android:text="to"
             android:textColor="#5B5B5B"
@@ -120,22 +144,12 @@
             app:layout_constraintTop_toTopOf="@id/toEditText" />
 
         <TextView
-            android:id="@+id/toEmailTextError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Please enter valid mail address"
-            android:textSize="14sp"
-            android:textColor="@android:color/holo_red_dark"
-            app:layout_constraintStart_toStartOf="@id/toEditText"
-            app:layout_constraintTop_toBottomOf="@id/toEditText"
-            />
-
-        <TextView
             android:id="@+id/subjectStaticText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingHorizontal="24dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
             android:paddingVertical="8dp"
             android:text="Subject"
             android:textColor="#5B5B5B"

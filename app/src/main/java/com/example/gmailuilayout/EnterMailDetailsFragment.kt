@@ -1,7 +1,6 @@
 package com.example.gmailuilayout
 
 import android.os.Bundle
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,16 +8,17 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import com.example.gmailuilayout.databinding.FragmentEnterMailDetailsBinding
 import com.google.android.material.snackbar.Snackbar
+import java.time.LocalDateTime
 
 class EnterMailDetailsFragment : Fragment() {
+    private val emailViewModel: EmailsListViewModel by activityViewModels()
     private lateinit var binding: FragmentEnterMailDetailsBinding
 
     private val menuProvider = object : MenuProvider {
@@ -30,7 +30,20 @@ class EnterMailDetailsFragment : Fragment() {
             when (menuItem.itemId) {
                 R.id.sendActionMenu -> {
 
-                    binding.root.showSnackBarWithAction("send button click")
+                    if (validateEmailsItem()) {
+                        val newEmailsDetails = EmailItem(
+                            emailId = emailViewModel.getEmailsCount() + 1,
+                            senderImage = emailViewModel.getRandomUserImage(),
+                            senderName = binding.senderNameEditText.text.toString(),
+                            emailDateTime = LocalDateTime.now(),
+                            emailSubject = binding.subjectEditText.text.toString(),
+                            emailMessage = binding.messageEditText.text.toString(),
+                            starMarked = false
+                        )
+                        emailViewModel.addNewEmails(newEmailsDetails)
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
+
                     return true
                 }
 
@@ -78,6 +91,7 @@ class EnterMailDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity).setAppBarAndBottomNavVisible(false)
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
 
         val menuHost: MenuHost = requireActivity()
@@ -89,65 +103,10 @@ class EnterMailDetailsFragment : Fragment() {
         )
 
         binding.apply {
-            toEditText.doAfterTextChanged { editable: Editable? ->
 
-                if (!isValidEmail(editable.toString()) && toEmailTextError.visibility != View.VISIBLE) {
-                    // show error text view and move ToEditText down ward
-
-
-                    toEditText.error = "please enter a valid mail address"
-
-                    toEmailTextError.visibility = View.VISIBLE
-
-                    updateConstraint(
-                        constrainedViewId = subjectEditText.id,
-                        constrainedSide = ConstraintSet.TOP,
-                        targetViewId = toEmailTextError.id,
-                        targetSide = ConstraintSet.BOTTOM
-                    )
-                }else  if (isValidEmail(editable.toString()) && toEmailTextError.visibility == View.VISIBLE){
-
-                    toEmailTextError.visibility = View.GONE
-
-                    updateConstraint(
-                        constrainedViewId = subjectEditText.id,
-                        constrainedSide = ConstraintSet.TOP,
-                        targetViewId = toEditText.id,
-                        targetSide = ConstraintSet.BOTTOM
-                    )
-                }
-
+            toolbar.setNavigationOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-
-            fromEditText.doAfterTextChanged { editable: Editable? ->
-
-                if (!isValidEmail(editable.toString()) && fromEmailTextError.visibility != View.VISIBLE) {
-                    // show error text view and move ToEditText down ward
-
-                    fromEmailTextError.visibility = View.VISIBLE
-
-                    updateConstraint(
-                        constrainedViewId = toEditText.id,
-                        constrainedSide = ConstraintSet.TOP,
-                        targetViewId = fromEmailTextError.id,
-                        targetSide = ConstraintSet.BOTTOM
-                    )
-                } else  if (isValidEmail(editable.toString()) && fromEmailTextError.visibility == View.VISIBLE) {
-                    // show error text view and move ToEditText down ward
-
-                    fromEmailTextError.visibility = View.GONE
-
-                    updateConstraint(
-                        constrainedViewId = toEditText.id,
-                        constrainedSide = ConstraintSet.TOP,
-                        targetViewId = fromEditText.id,
-                        targetSide = ConstraintSet.BOTTOM
-                    )
-                }
-
-            }
-
-
         }
 
     }
@@ -165,8 +124,59 @@ class EnterMailDetailsFragment : Fragment() {
             .show()
     }
 
+    fun isValidEmail(email: String): Boolean {
+        val emailRegex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
+        return emailRegex.matches(email)
+    }
 
-    private fun updateConstraint(
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MenuHost).removeMenuProvider(menuProvider)
+    }
+
+    fun validateEmailsItem(): Boolean {
+        binding.apply {
+            if (senderNameEditText.text.toString().isEmpty()) {
+                senderNameEditText.error = "Add a subject"
+                return false
+            }
+
+            if (fromEditText.text.toString().isEmpty()) {
+                fromEditText.error = "Add valid receivers mail address"
+                return false
+            }
+
+            if (!isValidEmail(fromEditText.text.toString())){
+                fromEditText.error = "Add valid receivers mail address"
+                return false
+            }
+
+
+            if (toEditText.text.toString().isEmpty()) {
+                toEditText.error = "Add valid senders mail address"
+                return false
+            }
+
+            if (!isValidEmail(toEditText.text.toString())){
+                toEditText.error = "Add valid receivers mail address"
+                return false
+            }
+
+            if (subjectEditText.text.toString().isEmpty()) {
+                subjectEditText.error = "Add a subject"
+                return false
+            }
+
+            if (messageEditText.text.toString().isEmpty()) {
+                messageEditText.error = "Add a message"
+                return false
+            }
+        }
+        return true
+    }
+
+    /*
+        private fun updateConstraint(
         constrainedViewId: Int,
         constrainedSide: Int,
         targetViewId: Int,
@@ -184,17 +194,7 @@ class EnterMailDetailsFragment : Fragment() {
         )
         constraintSet.applyTo(binding.main)
     }
-
-    fun isValidEmail(email: String): Boolean {
-        val emailRegex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
-        return emailRegex.matches(email)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (requireActivity() as MenuHost).removeMenuProvider(menuProvider)
-    }
-
+     */
 
 
 }

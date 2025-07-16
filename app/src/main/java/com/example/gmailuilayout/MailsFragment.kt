@@ -5,24 +5,29 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gmailuilayout.databinding.FragmentMailsBinding
 
+
 class MailsFragment : Fragment() {
 
     private lateinit var binding: FragmentMailsBinding
     private lateinit var rcvEmailsAdapter: RcvEmailsAdapter
-    private lateinit var emailsList: MutableList<EmailItem>
-    private lateinit var viewModel: EmailsListViewModel
+
+    private val emailViewModel: EmailsListViewModel by activityViewModels()
+
     private var deleteIcon: Drawable? = null
 
     private var searchQuery = ""
@@ -48,15 +53,15 @@ class MailsFragment : Fragment() {
             if (position != RecyclerView.NO_POSITION) {
 
                 //emailsListViewModel.removeEmailWithId(position)
-                emailsList.remove(emailsList[position])
+                emailViewModel.removeEmailAtPosition(position)
                 rcvEmailsAdapter.notifyItemRemoved(position)
-                rcvEmailsAdapter.notifyItemRangeChanged(position, emailsList.size)
+                rcvEmailsAdapter.notifyItemRangeChanged(position, emailViewModel.getEmailsCount())
                 Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
             }
         }
 
         override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
-            return 0.7f
+            return 0.6f
         }
 
         override fun onChildDraw(
@@ -124,9 +129,6 @@ class MailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        emailsList = mutableListOf()
-        viewModel = EmailsListViewModel()
-        emailsList.addAll(viewModel.dummyData())
 
     }
 
@@ -135,7 +137,7 @@ class MailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMailsBinding.inflate(inflater, container, false)
-        rcvEmailsAdapter = RcvEmailsAdapter(emailsList)
+        rcvEmailsAdapter = RcvEmailsAdapter(emailViewModel.emailsList)
 
         return binding.root
     }
@@ -158,14 +160,19 @@ class MailsFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
             fabButtonCompose.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, EnterMailDetailsFragment())
+                    .addToBackStack(null)
+                    .commit()
 
+                /*
+                        val email = viewModel.getRandomEmail()
+                                emailsList.add(0, email) // Add to top
+                                rcvEmailsAdapter.notifyItemInserted(0)
+                                binding.rcvEmails.scrollToPosition(0) // Optional: scroll to new item
+                 */
 
-
-                val email = viewModel.getRandomEmail()
-                emailsList.add(0, email) // Add to top
-                rcvEmailsAdapter.notifyItemInserted(0)
-                binding.rcvEmails.scrollToPosition(0) // Optional: scroll to new item
-                Toast.makeText(requireContext(), "${email.senderName} Added", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "compose clicked", Toast.LENGTH_SHORT)
                     .show()
             }
 
@@ -179,11 +186,14 @@ class MailsFragment : Fragment() {
                 searchBar.setText(searchQuery)
 
                 // perform task on query like | api calls | list filter | etc
+                emailViewModel.searchFilterOnEmails(searchQuery)
+                Log.d("tag", "emails list after search -- ${emailViewModel.emailsList}")
+
+                rcvEmailsAdapter = RcvEmailsAdapter(emailViewModel.emailsList)
+                binding.rcvEmails.adapter = rcvEmailsAdapter
+                rcvEmailsAdapter.notifyDataSetChanged()
 
                 searchView.hide()
-
-                Toast.makeText(requireContext(), "searchQuery is $searchQuery", Toast.LENGTH_SHORT)
-                    .show()
 
                 true
             }

@@ -1,11 +1,7 @@
 package com.example.gmailuilayout
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.time.LocalDateTime
-import kotlin.random.Random
 
 class EmailsListViewModel() : ViewModel() {
 
@@ -149,35 +145,57 @@ class EmailsListViewModel() : ViewModel() {
 
     )
 
-
     private val tag = "EmailsListViewModel"
-    private val _emailsList = MutableLiveData<List<EmailItem>>(emptyList())
-    val emailsList: LiveData<List<EmailItem>> get() = _emailsList
+    var emailsList = mutableListOf<EmailItem>()
+    // emailsList = mutableListOf()
+
+//    private val _emailsList = MutableLiveData<List<EmailItem>>(emptyList())
+//    val emailsList: LiveData<List<EmailItem>> get() = _emailsList
 
     init {
         getAllEmailsList()
     }
 
-    fun getAllEmailsList() {
-        _emailsList.value = dummyData()
+    private fun getAllEmailsList() {
+        emailsList.addAll(emailsDummpyList)
     }
 
-    fun removeEmailWithId(emailIdToDelete: Int) {
-        val currentList = _emailsList.value?.toMutableList() ?: return
-        currentList.removeIf { it.emailId == emailIdToDelete }
-        _emailsList.value = currentList
-        Log.d(tag, "Deleted email with id: ${emailIdToDelete}")
-
+    fun removeEmailAtPosition(position: Int) {
+        emailsList.remove(emailsList[position])
     }
+
+    fun getEmailsCount(): Int = emailsList.size
 
     fun dummyData(): List<EmailItem> {
         return emailsDummpyList
     }
 
-    fun getRandomEmail() : EmailItem{
+    fun getRandomEmail(): EmailItem {
         val randomIndex = emailsDummpyList.indices.random()
         return emailsDummpyList[randomIndex]
     }
 
+    fun getRandomUserImage(): String {
+        val randomIndex = emailsDummpyList.indices.random()
+        return emailsDummpyList[randomIndex].senderImage
+    }
 
+    fun addNewEmails(newEmail: EmailItem) {
+        emailsList.add(0, newEmail)
+    }
+
+    fun searchFilterOnEmails(searchQuery: String) {
+        val query = searchQuery.trim().lowercase()
+
+        if (searchQuery.isEmpty()){
+            emailsList = emailsDummpyList.toMutableList()
+        }else{
+            emailsList = emailsDummpyList.filter {
+                it.senderName.lowercase().contains(query) ||
+                        it.emailSubject.lowercase().contains(query) ||
+                        it.emailMessage.lowercase().contains(query)
+            }.toMutableList()
+
+        }
+    }
 }
